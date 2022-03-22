@@ -1,4 +1,5 @@
 from django.db import models
+import secrets
 
 
 class Bot(models.Model):
@@ -12,11 +13,17 @@ class Bot(models.Model):
     ]
 
     name = models.CharField(max_length=200)
+    slug = models.CharField(max_length=128, null=True, blank=True)
     status = models.CharField(max_length=64, null=True, blank=True, choices=BOT_STATUS_CHOICES)
     battery_status = models.DecimalField(max_digits=3, decimal_places=0, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = secrets.token_hex(5).upper()
+        super(Bot, self).save(*args, **kwargs)
 
 
 class Trash(models.Model):
