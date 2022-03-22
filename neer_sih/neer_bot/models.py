@@ -21,7 +21,7 @@ class Bot(models.Model):
 
 class Trash(models.Model):
     bot = models.ForeignKey('Bot', on_delete=models.CASCADE)
-    date_stamp = models.DateField(auto_add_now=True)
+    date_stamp = models.DateField(auto_now_add=True, null=True, blank=True)
     degradable_trash = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     non_degradable_trash = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
@@ -34,7 +34,7 @@ class LastLocation(models.Model):
     lat = models.DecimalField(max_digits=22, decimal_places=16, null=True, blank=True)
     lon = models.DecimalField(max_digits=22, decimal_places=16, null=True, blank=True)
     image = models.ImageField(upload_to='geo-locations/', null=True, blank=True)
-    time_stamp = models.DateTimeField(auto_now_add=True)
+    time_stamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f'{self.bot} - ({self.lat}, {self.lon}) at {self.time}'
@@ -57,7 +57,7 @@ class Obstacles(models.Model):
 
 
 class LastCollection(models.Model):
-    date_time_stamp = models.DateTimeField(auto_now_add=True)
+    date_time_stamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     dump_centre = models.ForeignKey('GarbageCollectionCenter', on_delete=models.SET_NULL, null=True)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
 
