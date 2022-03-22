@@ -58,3 +58,24 @@ class TrashAPIView(APIView):
             s.save()
             return Response({'trash': s.data})
         return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LastLocationAPIView(APIView):
+    def post(self, request):
+        s = LastLocationSerializer(data=request.data)
+        if s.is_valid():
+            s.save()
+            return Response({'last_location': s.data})
+        return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        bot_slug = request.data.get('bot', '')
+        qs = LastLocation.objects.select_related('bot').filter(bot__slug=bot_slug).order_by('-id').first()
+        if qs:
+            return Response({'last_location': LastLocationSerializer(qs).data})
+        return Response({'message': 'Not enough data'})
+
+
+# class LastLocationRetrieveAPIView(RetrieveUpdateAPIView):
+#     queryset = LastCollection.objects.all()
+#     look
