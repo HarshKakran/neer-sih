@@ -5,11 +5,11 @@ from .models import LastLocation, Bot, Trash, Obstacles, LastCollection, Garbage
 class BotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bot
-        fields = ('name', 'status', 'battery')
+        fields = ('name', 'status', 'battery_status', 'slug')
 
 
 class LastLocationSerializer(serializers.ModelSerializer):
-    bot = serializers.SlugRelatedSerializer(slug_field='name', queryset=Bot.objects.all())
+    bot = serializers.SlugRelatedField(slug_field='name', queryset=Bot.objects.all())
 
     class Meta:
         model = LastLocation
@@ -17,7 +17,7 @@ class LastLocationSerializer(serializers.ModelSerializer):
 
 
 class TrashSerializer(serializers.ModelSerializer):
-    bot = serializers.StringRelatedField(slug_field='name', queryset=Bot.objects.all())
+    bot = serializers.SlugRelatedField(slug_field='name', queryset=Bot.objects.all())
 
     class Meta:
         model = Trash
