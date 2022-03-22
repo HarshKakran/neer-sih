@@ -76,6 +76,44 @@ class LastLocationAPIView(APIView):
         return Response({'message': 'Not enough data'})
 
 
-# class LastLocationRetrieveAPIView(RetrieveUpdateAPIView):
-#     queryset = LastCollection.objects.all()
-#     look
+class ObstacleAPIView(APIView):
+    def get(self, request):
+        status = request.GET.get('status')
+        print(status)
+        qs = Obstacles.objects.filter(status=status)
+        if qs:
+            return Response({'obstacles': ObstaclesSerializer(qs, many=True).data})
+        return Response({'message': f'No obstacle with {status} status.'})
+
+    def post(self, request):
+        s = ObstaclesSerializer(data=request.data)
+        if s.is_valid():
+            s.save()
+            return Response({'obstacle': s.data})
+        return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class ObstacleRetrieveUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = Obstacles.objects.all()
+    serializer_class = ObstaclesSerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'slug'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            return Response(data={'obstacle': ObstaclesSerializer(instance).data}, status=status.HTTP_200_OK)
+
+        except Obstacles.DoesNotExist:
+            return Response(data={'message': 'This obstacle does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except Obstacles.DoesNotExist:
+            return Response(data={'message': 'This obstacle does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        s = ObstaclesSerializer(instance=instance, data=self.request.data, partial=True)
+        if s.is_valid():
+            s.save()
+            return Response(data={'obstacle': s.data}, status=status.HTTP_200_OK)
+        return Response(data={'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)

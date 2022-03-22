@@ -27,7 +27,7 @@ class TrashSerializer(serializers.ModelSerializer):
 class ObstaclesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Obstacles
-        fields = ('lat', 'lon', 'status')
+        fields = ('lat', 'lon', 'status', 'slug')
 
 
 class LastCollectionSerializer(serializers.ModelSerializer):

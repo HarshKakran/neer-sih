@@ -58,9 +58,16 @@ class Obstacles(models.Model):
     lat = models.DecimalField(max_digits=22, decimal_places=16)
     lon = models.DecimalField(max_digits=22, decimal_places=16)
     status = models.CharField(max_length=64, choices=OBSTACLE_STATUS_CHOICES, null=True, blank=True)
+    slug = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self):
         return f'({self.lat}, {self.lon}) - {self.status}'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = secrets.token_hex(5).upper()
+        super(Obstacles, self).save(*args, **kwargs)
+
 
 
 class LastCollection(models.Model):
