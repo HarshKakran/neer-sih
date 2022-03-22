@@ -17,7 +17,7 @@ class LastLocationSerializer(serializers.ModelSerializer):
 
 
 class TrashSerializer(serializers.ModelSerializer):
-    bot = serializers.SlugRelatedField(slug_field='name', queryset=Bot.objects.all())
+    bot = serializers.SlugRelatedField(slug_field='slug', queryset=Bot.objects.all())
 
     class Meta:
         model = Trash

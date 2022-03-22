@@ -41,3 +41,20 @@ class BotStatusAPIView(RetrieveUpdateAPIView):
             s.save()
             return Response(data={'bot_status': s.data}, status=status.HTTP_200_OK)
         return Response(data={'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TrashAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        date = request.GET.get('date')
+        qs = Trash.objects.filter(date_stamp=date)
+        if qs:
+            return Response({'trash': TrashSerializer(qs, many=True).data})
+        else:
+            return Response({'message': 'There is no trash collection for this day.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        s = TrashSerializer(data=self.request.data)
+        if s.is_valid():
+            s.save()
+            return Response({'trash': s.data})
+        return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
