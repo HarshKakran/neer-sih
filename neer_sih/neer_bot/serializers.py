@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import LastLocation, Bot, Trash, Obstacles, LastCollection, GarbageCollectionCenter
+from .models import LastLocation, Bot, Trash, Obstacles, LastDump, GarbageCollectionCenter
 
 
 class BotSerializer(serializers.ModelSerializer):
@@ -30,15 +30,14 @@ class ObstaclesSerializer(serializers.ModelSerializer):
         fields = ('lat', 'lon', 'status', 'slug')
 
 
-class LastCollectionSerializer(serializers.ModelSerializer):
-    dump_centre = serializers.SerializerMethodField()
+class LastDumpSerializer(serializers.ModelSerializer):
+    dump_centre = serializers.PrimaryKeyRelatedField(queryset=GarbageCollectionCenter.objects.all())
+    bot = serializers.SlugRelatedField(slug_field='slug', queryset=Bot.objects.all())
 
     class Meta:
-        model = LastCollection
-        fields = ('date_time_stamp', 'dump_centre', 'weight')
+        model = LastDump
+        fields = ('date_time_stamp', 'dump_centre', 'weight', 'bot')
 
-    def get_dump_centre(self, obj: LastCollection):
-        return obj.dump_centre
 
 
 class GarbageCollectionCenterSerializer(serializers.ModelSerializer):

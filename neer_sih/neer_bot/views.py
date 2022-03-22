@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Bot, Trash, LastLocation, Obstacles, LastCollection, GarbageCollectionCenter
+from .models import Bot, Trash, LastLocation, Obstacles, LastDump, GarbageCollectionCenter
 from .serializers import BotSerializer, TrashSerializer, LastLocationSerializer, ObstaclesSerializer, \
-    LastCollectionSerializer, GarbageCollectionCenterSerializer
+    LastDumpSerializer, GarbageCollectionCenterSerializer
 
 
 class BotListAPIView(APIView):
@@ -117,3 +117,19 @@ class ObstacleRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             s.save()
             return Response(data={'obstacle': s.data}, status=status.HTTP_200_OK)
         return Response(data={'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class LastDumpAPIView(APIView):
+    def get(self, request):
+        bot_slug = request.data.get('bot', '')
+        qs = LastDump.objects.select_related('bot').filter(bot__slug=bot_slug).order_by('-id').first()
+        if qs:
+            return Response({'last_dump': LastDumpSerializer(qs).data})
+        return Response({'message': "Not enough data"})
+
+    def post(self, request):
+        s = LastDumpSerializer(data=request.data)
+        if s.is_valid():
+            s.save()
+            return Response({'last_dump': s.data})
+        return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
