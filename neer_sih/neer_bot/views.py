@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Bot, Trash, LastLocation, Obstacles, LastDump, GarbageCollectionCenter
+from .models import Bot, Trash, LastLocation, Obstacles, LastDump, TrashCollectionCenter
 from .serializers import BotSerializer, TrashSerializer, LastLocationSerializer, ObstaclesSerializer, \
-    LastDumpSerializer, GarbageCollectionCenterSerializer
+    LastDumpSerializer, TrashCollectionCenterSerializer
 
 
 class BotListAPIView(APIView):
@@ -133,3 +133,11 @@ class LastDumpAPIView(APIView):
             return Response({'last_dump': s.data})
         return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class TrashCollectionCentreAPIView(APIView):
+    def post(self, request):
+        s = TrashCollectionCenterSerializer(data=request.data)
+        if s.is_valid():
+            s.save()
+            return Response({'trash_collection_centre': s.data})
+        return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)

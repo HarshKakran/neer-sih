@@ -73,14 +73,14 @@ class Obstacles(models.Model):
 class LastDump(models.Model):
     bot = models.ForeignKey('Bot', on_delete=models.CASCADE)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    dump_centre = models.ForeignKey('GarbageCollectionCenter', on_delete=models.SET_NULL, null=True)
+    dump_centre = models.ForeignKey('TrashCollectionCenter', on_delete=models.SET_NULL, null=True)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         return f'{self.date_time_stamp}-{self.dump_centre}-{self.weight} kg'
 
 
-class GarbageCollectionCenter(models.Model):
+class TrashCollectionCenter(models.Model):
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=128)
     state = models.CharField(max_length=128)
