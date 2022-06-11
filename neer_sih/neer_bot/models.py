@@ -69,7 +69,6 @@ class Obstacles(models.Model):
         super(Obstacles, self).save(*args, **kwargs)
 
 
-
 class LastDump(models.Model):
     bot = models.ForeignKey('Bot', on_delete=models.CASCADE)
     date_time_stamp = models.DateTimeField(auto_now_add=True, null=True, blank=True)

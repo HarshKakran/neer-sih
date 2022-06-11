@@ -50,7 +50,8 @@ class TrashAPIView(APIView):
         if qs:
             return Response({'trash': TrashSerializer(qs, many=True).data})
         else:
-            return Response({'message': 'There is no trash collection for this day.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'There is no trash collection for this day.'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         s = TrashSerializer(data=self.request.data)
@@ -92,6 +93,7 @@ class ObstacleAPIView(APIView):
             return Response({'obstacle': s.data})
         return Response({'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ObstacleRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Obstacles.objects.all()
     serializer_class = ObstaclesSerializer
@@ -117,6 +119,7 @@ class ObstacleRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             s.save()
             return Response(data={'obstacle': s.data}, status=status.HTTP_200_OK)
         return Response(data={'message': s.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LastDumpAPIView(APIView):
     def get(self, request):

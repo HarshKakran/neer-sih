@@ -39,7 +39,6 @@ class LastDumpSerializer(serializers.ModelSerializer):
         fields = ('date_time_stamp', 'dump_centre', 'weight', 'bot')
 
 
-
 class TrashCollectionCenterSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrashCollectionCenter
